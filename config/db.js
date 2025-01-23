@@ -16,3 +16,6 @@ const connectDB = async () => {
 };
 
 export default connectDB;
+
+//This is my db.js file 
+
