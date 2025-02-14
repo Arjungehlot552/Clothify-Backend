@@ -6,7 +6,10 @@ import authRoutes from "./routes/authRoutes.js";
 import razorpayRoutes from "./routes/razorpayRoutes.js";
 import addressRoutes from "./routes/addressRoutes.js";
 import shopRoutes from "./routes/shopRoutes.js";
+import shopVerificationRoutes from "./routes/shopVerificationRoutes.js"; // ✅ Fixed Import
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // Load environment variables
 dotenv.config();
@@ -15,35 +18,40 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Connect to MongoDB
+// ✅ Connect to MongoDB
 connectDB();
 
-// ✅ FIX: CORS Configuration to allow frontend requests
+// ✅ CORS Configuration
 app.use(
   cors({
-    origin: "http://localhost:3000", // Allow requests from frontend
+    origin: process.env.FRONTEND_URL || "http://localhost:3000", // Supports .env FRONTEND_URL
     credentials: true, // Allow cookies and authentication headers
   })
 );
 
-// Middleware
+// ✅ Middleware
 app.use(express.json()); // Parses JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Parses form data
-app.use("/uploads", express.static("uploads")); // Serve uploaded files
+
+// ✅ Static Folder for Uploaded Files
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); 
 
 // ✅ API Routes
 app.get("/", (req, res) => res.send("🚀 Server is Running!"));
 
+// ✅ All API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/razorpay", razorpayRoutes);
 app.use("/api/address", addressRoutes);
-app.use("/api/shop", shopRoutes); // ✅ Ensure this route is working
+app.use("/api/shop", shopRoutes);
+app.use("/api/verify-shop", shopVerificationRoutes); // ✅ Fixed Route
 
-// Error Handling Middleware
+// ✅ Error Handling Middleware
 app.use(notFound);
 app.use(errorHandler);
 
-// Start Server
+// ✅ Start Server
 app.listen(port, () => {
   console.log(`✅ Server running on: http://localhost:${port}`);
 });
