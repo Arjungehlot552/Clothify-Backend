@@ -24,7 +24,7 @@ connectDB();
 // ✅ CORS Configuration
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000", // Supports .env FRONTEND_URL
+    origin: process.env.FRONTEND_URL || "https://localmart-azure.vercel.app/", // Supports .env FRONTEND_URL
     credentials: true, // Allow cookies and authentication headers
   })
 );
